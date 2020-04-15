@@ -29,8 +29,8 @@ defmodule Guess.Player.Server do
   @impl true
   def handle_call({:join, player_name, host_name}, _from, data) do
     with {:ok, game} <- Player.get_game(host_name),
-         game_info <- Game.join(game, player_name) do
-      {:reply, {:ok, game_info}, Impl.join_game(data, game)}
+         _ <- Game.join(game, player_name) do
+      {:reply, :ok, Impl.join_game(data, game)}
     else
       {:error, :game_doesnt_exist} ->
         {:reply, {:error, "#{host_name} is not currently in a game"}, data}
