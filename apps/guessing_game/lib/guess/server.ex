@@ -87,15 +87,20 @@ defmodule Guess.Server do
 
   The host player has to be connected to the server.
 
+  ## Options
+  - `max_points` point threshold determining the end of the game (300 default)
+  - `guess_from` lower allowable guess value (defaults to 1)
+  - `guess_to` upper allowable guess value (defaults to 100)
+
   ## Examples
 
       iex> p1 = "Player 1"
       iex> :ok = Server.connect(p1)
       iex> p1 |> Server.host()
   """
-  @spec host(String.t()) :: {:ok, any} | {:error, any}
-  def host(player_name) do
-    spec = {Game.Server, [host: player_name]}
+  @spec host(String.t(), keyword()) :: {:ok, any} | {:error, any}
+  def host(player_name, opts \\ []) do
+    spec = {Game.Server, [host: player_name] ++ opts}
 
     with {:ok, pid} <- DynamicSupervisor.start_child(GSup, spec),
          {:ok, _player} <- Player.host_game(player_name, pid) do

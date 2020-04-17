@@ -48,27 +48,33 @@ defmodule Guess.Game.Server do
         data
       )
       when player_name == player_turn do
-    new_data = Impl.end_turn(data, player_name, guess)
-    round_turn = round_turn(new_data)
+    case guess >= data.guess_from and guess <= data.guess_to do
+      true ->
+        new_data = Impl.end_turn(data, player_name, guess)
+        round_turn = round_turn(new_data)
 
-    {next_state, new_data, reply} =
-      if round_turn == 0 do
-        new_data = Impl.end_round(new_data)
+        {next_state, new_data, reply} =
+          if round_turn == 0 do
+            new_data = Impl.end_round(new_data)
 
-        next_state =
-          if Impl.is_game_over?(new_data),
-            do: :ended,
-            else: {:round, new_data.round, :turn, data.players |> Enum.at(round_turn)}
+            next_state =
+              if Impl.is_game_over?(new_data),
+                do: :ended,
+                else: {:round, new_data.round, :turn, data.players |> Enum.at(round_turn)}
 
-        reply = {:end_round, {next_state, new_data.points}}
-        {next_state, new_data, reply}
-      else
-        next_state = {:round, new_data.round, :turn, data.players |> Enum.at(round_turn)}
-        reply = {:end_turn, next_state}
-        {next_state, new_data, reply}
-      end
+            reply = {:end_round, {next_state, new_data.points}}
+            {next_state, new_data, reply}
+          else
+            next_state = {:round, new_data.round, :turn, data.players |> Enum.at(round_turn)}
+            reply = {:end_turn, next_state}
+            {next_state, new_data, reply}
+          end
 
-    {:next_state, next_state, new_data, [{:reply, from, reply}]}
+        {:next_state, next_state, new_data, [{:reply, from, reply}]}
+
+      false ->
+        {:keep_state_and_data, [{:reply, from, {:error, :out_of_bounds}}]}
+    end
   end
 
   @impl true
@@ -84,7 +90,7 @@ defmodule Guess.Game.Server do
   # Supervisor API #
   def start_link(opts) do
     host = Keyword.fetch!(opts, :host)
-    GSM.start_link(Server, Impl.new(host))
+    GSM.start_link(Server, Impl.new(host, opts))
   end
 
   # Private #

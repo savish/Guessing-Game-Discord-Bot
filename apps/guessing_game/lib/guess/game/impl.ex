@@ -7,9 +7,16 @@ defmodule Guess.Game.Impl do
   Games are identified by the host player. Once a game has been hosted, it
   enters the setting up state, where other players can join in.
   """
-  @spec new(String.t()) :: Game.state_and_data()
-  def new(host) do
-    {:setting_up, %Game{host: host, players: [host]}}
+  @spec new(String.t(), keyword) :: Game.state_and_data()
+  def new(host, opts \\ []) do
+    {:setting_up,
+     %Game{
+       host: host,
+       players: [host],
+       max_points: Keyword.get(opts, :max_points, 300),
+       guess_from: Keyword.get(opts, :guess_from, 1),
+       guess_to: Keyword.get(opts, :guess_to, 100)
+     }}
   end
 
   @doc """
@@ -45,7 +52,7 @@ defmodule Guess.Game.Impl do
     start(data, 0..(length(data.players) - 1) |> Enum.to_list())
   end
 
-  @spec end_turn(Game.t(), String.t(), 1..100) :: Game.t()
+  @spec end_turn(Game.t(), String.t(), integer()) :: Game.t()
   def end_turn(data, player_name, guess) do
     {_, points} =
       data.points
@@ -70,7 +77,7 @@ defmodule Guess.Game.Impl do
 
   @spec is_game_over?(Game.t()) :: boolean()
   def is_game_over?(data) do
-    winners = Enum.filter(data.points, fn {_k, v} -> v >= 300 end)
+    winners = Enum.filter(data.points, fn {_k, v} -> v >= data.max_points end)
     length(winners) > 0
   end
 

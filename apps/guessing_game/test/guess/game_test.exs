@@ -47,6 +47,11 @@ defmodule Guess.GameTest do
       assert {round, turn} == {1, p2}
     end
 
+    test "players guesses must be within bounds", %{game: game, host: host} do
+      play_result = Game.play(game, host, 102)
+      assert play_result == {:error, :out_of_bounds}
+    end
+
     test "players can only make a guess during their turns", %{game: game, p2: p2} do
       play_result = Game.play(game, p2, 12)
       assert play_result == {:error, :not_your_turn}
