@@ -72,8 +72,13 @@ defmodule Guess.Game.Server do
   end
 
   @impl true
-  def handle_event({:call, from}, {:play, _, _}, _state, _data) do
+  def handle_event({:call, from}, {:play, _, _}, {:round, _, :turn, _}, _data) do
     {:keep_state_and_data, [{:reply, from, {:error, :not_your_turn}}]}
+  end
+
+  @impl true
+  def handle_event({:call, from}, {:play, _, _}, _state, _data) do
+    {:keep_state_and_data, [{:reply, from, {:error, :invalid_action_for_state}}]}
   end
 
   # Supervisor API #
