@@ -1,0 +1,11 @@
+image: elixir:latest
+
+before_script:
+  - MIX_ENV=test mix local.rebar --force
+  - MIX_ENV=test mix local.hex --force
+  - MIX_ENV=test mix deps.get
+
+mix:
+  script:
+    - cd apps/guessing_game
+    - MIX_ENV=test mix test
