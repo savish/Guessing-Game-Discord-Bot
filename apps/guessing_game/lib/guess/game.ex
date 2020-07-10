@@ -10,7 +10,7 @@ defmodule Guess.Game do
   defstruct [
     :host,
     :players,
-    :chosen_number,
+    chosen_numbers: %{},
     max_points: 300,
     guess_from: 1,
     guess_to: 100,
@@ -32,7 +32,7 @@ defmodule Guess.Game do
           guess_to: integer(),
           turn_order: [integer()],
           absolute_turn: integer(),
-          chosen_number: integer() | nil,
+          chosen_numbers: %{optional(String.t()) => integer()},
           points: %{optional(String.t()) => integer()}
         }
 

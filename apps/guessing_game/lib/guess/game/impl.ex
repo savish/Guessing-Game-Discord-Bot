@@ -39,7 +39,9 @@ defmodule Guess.Game.Impl do
       data
       | turn_order: turn_order,
         round: 1,
-        chosen_number: :rand.uniform(100),
+        chosen_numbers:
+          data.players
+          |> Enum.reduce(data.chosen_numbers, &Map.put_new(&2, &1, :rand.uniform(100))),
         points: data.players |> Enum.reduce(data.points, &Map.put_new(&2, &1, 0))
     }
   end
@@ -56,7 +58,10 @@ defmodule Guess.Game.Impl do
   def end_turn(data, player_name, guess) do
     {_, points} =
       data.points
-      |> Map.get_and_update(player_name, &{&1, &1 + calculate_points(data.chosen_number, guess)})
+      |> Map.get_and_update(
+        player_name,
+        &{&1, &1 + calculate_points(Map.get(data.chosen_numbers, player_name), guess)}
+      )
 
     # round_turn = rem(data.absolute_turn, length(data.players)) -- sever
     %Game{
@@ -71,7 +76,9 @@ defmodule Guess.Game.Impl do
     %Game{
       data
       | round: data.round + 1,
-        chosen_number: :rand.uniform(100)
+        chosen_numbers:
+          data.players
+          |> Enum.reduce(data.chosen_numbers, &Map.put_new(&2, &1, :rand.uniform(100)))
     }
   end
 
