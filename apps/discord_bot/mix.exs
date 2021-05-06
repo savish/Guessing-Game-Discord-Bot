@@ -26,7 +26,7 @@ defmodule Bot.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:alchemy, git: "https://github.com/cronokirby/alchemy.git"},
+      {:alchemy, "~> 0.7.0", hex: :discord_alchemy},
       {:guessing_game, in_umbrella: true}
     ]
   end
