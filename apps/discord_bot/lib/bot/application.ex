@@ -14,10 +14,39 @@ defmodule Bot.Application do
       Welcome to the Guessing Game!
       ==
 
-      # Controls
+      How to play
+      =
 
-      - !connect (?name) connect to the game server.
-      - !dc (?name) disconnect from the game server.
+      Who is the better guesser? Once the game starts,
+      a number will be chosen for every player. Try to
+      guess your number during your turn. At the end of
+      the round, points will be assigned to players
+      based on how close they come to their assigned
+      numbers.
+
+      Controls
+      =
+
+      - !connect (<<name>>)
+          connect to the game server. You can specify a
+          name otherwise it uses your discord name
+
+      - !dc (<<name>>)
+          disconnect from the game server.
+
+      - !host
+          host a new game
+
+      - !join <<player>>
+          join the game that <<player>> is playing
+
+      - !start
+          starts the game. Only the host should use this
+
+      - !play (<<name>>) <<number>>
+          guess a number. If you specified a different name
+          from your discord name, you have to specify that
+          name as you play
       ```
       """
 
@@ -174,9 +203,7 @@ defmodule Bot.Application do
         {:end_round, {{:round, round, :turn, turn}, points}} ->
           point_string = Enum.reduce(points, "", fn {k, v}, acc -> "#{acc}#{k} => #{v} " end)
 
-          "Round finished.\nCurrent points: #{point_string}\n\nNew round\n==\nRound #{round}, #{
-            turn
-          }'s turn\nEnter your guess: "
+          "Round finished.\nCurrent points: #{point_string}\n\nNew round\n==\nRound #{round}, #{turn}'s turn\nEnter your guess: "
 
         {:end_round, {:ended, points}} ->
           point_string = Enum.reduce(points, "", fn {k, v}, acc -> "#{acc}#{k} => #{v} " end)
