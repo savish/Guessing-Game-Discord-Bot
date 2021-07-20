@@ -26,7 +26,9 @@ defmodule Guess.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gen_state_machine, "~> 2.0"}
+      {:gen_state_machine, "~> 3.0"},
+      {:typed_struct, "~> 0.2.1"},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false}
     ]
   end
 end

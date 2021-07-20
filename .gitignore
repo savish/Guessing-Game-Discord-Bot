@@ -19,8 +19,12 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
-# VSCode
+# EDITORS AND IDES
 .elixir_ls
+.vscode
+.idea
+*.iml
 
 # Other
 dev.exs
+.DS_store
