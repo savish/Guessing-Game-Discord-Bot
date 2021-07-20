@@ -9,8 +9,7 @@ defmodule Guess.Player.Bonus do
 
   ## Example
 
-      iex> alias Guess.Player.Bonus
-      iex> bonus = Bonus.new(35, :exceptional)
+      iex> bonus = Guess.Player.Bonus.new(35, :exceptional)
       iex> bonus.value
       35
       iex> bonus.reason

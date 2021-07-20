@@ -18,11 +18,11 @@ defmodule Guess.Player.Round do
       iex> alias Guess.Player.{Round, Bonus}
       iex> Round.new(1, 47)
       ...>   |> Round.guess(74)
-      ...>   |> Round.add_bonus(25, :reverse_match)
+      ...>   |> Round.add_bonus(25, :inverse_match)
       ...>   |> Round.calculate_points()
       %Round{
         assigned: 47,
-        bonuses: [%Bonus{reason: :reverse_match, value: 25}],
+        bonuses: [%Bonus{reason: :inverse_match, value: 25}],
         guess: 74,
         points: 98,
         round: 1
